@@ -1,42 +1,37 @@
-import { Button } from '@/components/ui/button';
-import { SignUpButton, auth } from '@clerk/nextjs';
-import Image from 'next/image';
-import React from 'react';
-import heroImage from './hero.svg';
-import { redirect } from 'next/navigation';
+import { getPostCount, getPosts } from '@/app/actions/post';
+import { format } from 'date-fns';
+import Link from 'next/link';
 
-export default function About() {
-  const { userId } = auth();
-
-  if (userId) {
-    redirect('/main');
-  }
+export default async function Page() {
+  const posts = await getPosts();
+  const count = await getPostCount();
 
   return (
-    <main className="min-h-screen grid place-content-center text-center">
-      <div>
-        <h1 className="font-bold text-3xl mb-6">ようこそ</h1>
-        <p className="mb-6">アカウントを作成してください。</p>
+    <div>
+      <h1 className="font-bold text-2xl mb-2">記事一覧</h1>
+      <p className="mb-8 text-muted-foreground">全{count}件</p>
+      {posts.length > 0 ? (
+        <ul className="divide-y">
+          {posts.map((post) => {
+            return (
+              <li key={post.id} className="py-4">
+                <h2 className="font-bold mb-1">
+                  <Link href={`/posts/${post.id}`}>{post.title}</Link>
+                </h2>
+                <p className="text-muted-foreground text-sm">
+                  <time>{format(post.createdAt, 'yyyy年M月d日 HH:mm:ss')}</time>
+                </p>
 
-        <Image className="h-60 mx-auto" src={heroImage} alt="" />
-
-        <ol className="border list-decimal text-left pl-12 bg-muted text-muted-foreground p-4 rounded-lg mb-6 leading-loose">
-          <li>
-            <code className="px-2 py-1 border rounded-md bg-white">
-              ***+clerk_test@example.com
-            </code>
-            でデモアカウントを作成できます。
-          </li>
-          <li>
-            <code className="px-2 py-1 border rounded-md bg-white">424242</code>{' '}
-            の認証コードでログインできます。
-          </li>
-        </ol>
-
-        <SignUpButton afterSignUpUrl="/">
-          <Button>アカウントを作成</Button>
-        </SignUpButton>
-      </div>
-    </main>
+                <p className="truncate">{post.body}</p>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p className="border rounded-md px-4 py-2 bg-muted text-muted-foreground">
+          記事はありません
+        </p>
+      )}
+    </div>
   );
 }

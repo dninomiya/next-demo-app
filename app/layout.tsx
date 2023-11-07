@@ -1,12 +1,10 @@
-import Header from '@/app/header';
-import { cn } from '@/lib/utils';
+import Browser from '@/app/components/browser';
+import Footer from '@/app/components/footer';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
+import Header from '@/app/components/header';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,11 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider afterSignInUrl="/main" afterSignUpUrl="/onboarding">
+    <ClerkProvider afterSignInUrl="/" afterSignUpUrl="/onboarding">
       <html lang="ja">
-        <body className={cn(inter.className, 'container max-w-xl')}>
-          <Header />
-          <main className="py-10">{children}</main>
+        <body className="px-4 py-10 bg-gray-50">
+          <Browser>
+            <Header />
+            <main className="p-6">{children}</main>
+          </Browser>
+          <Footer />
           <Analytics />
         </body>
       </html>

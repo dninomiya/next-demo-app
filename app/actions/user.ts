@@ -2,6 +2,7 @@
 
 import { authGuard } from '@/app/actions/auth';
 import { db } from '@/app/actions/lib';
+import { clerkClient } from '@clerk/nextjs';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -16,7 +17,7 @@ export const currentUser = async () => {
       id: uid,
     },
     include: {
-      pets: true,
+      posts: true,
     },
   });
 
@@ -37,6 +38,12 @@ export const createUser = async (formData: FormData) => {
     data: {
       ...validatedData,
       id: uid,
+    },
+  });
+
+  await clerkClient.users.updateUserMetadata(uid, {
+    publicMetadata: {
+      onboarded: true,
     },
   });
 

@@ -9,16 +9,17 @@ datasource db {
 }
 
 model User {
-  id   String @id
-  name String @db.VarChar(240)
-  pets Pet[]
+  id    String @id
+  name  String @db.VarChar(240)
+  posts Post[]
 }
 
-model Pet {
-  id       String @id @default(cuid())
-  avatarId String
-  health   Int    @default(100)
-  name     String @db.VarChar(240)
-  owner    User   @relation(fields: [ownerId], references: [id])
-  ownerId  String
+model Post {
+  id           String   @id @default(cuid())
+  thumbnailURL String?
+  title        String   @db.VarChar(240)
+  body         String   @db.VarChar(140)
+  author       User     @relation(fields: [authorId], references: [id])
+  authorId     String
+  createdAt    DateTime @default(now())
 }
