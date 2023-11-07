@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SignOutButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
+import { LogOut, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -25,14 +26,18 @@ export default async function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href="/mypage">マイページ</Link>
+          <Link href="/mypage">
+            <User className="mr-2" size={20} />
+            マイページ
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <SignOutButton>
-            <button>ログアウト</button>
-          </SignOutButton>
-        </DropdownMenuItem>
+        <SignOutButton>
+          <DropdownMenuItem>
+            <LogOut className="mr-2" size={20} />
+            ログアウト
+          </DropdownMenuItem>
+        </SignOutButton>
       </DropdownMenuContent>
     </DropdownMenu>
   );
