@@ -11,7 +11,6 @@ import { cache } from 'react';
 import { z } from 'zod';
 
 const PostSchema = z.object({
-  title: z.string().max(240),
   body: z.string().max(140),
 });
 
@@ -19,7 +18,6 @@ export const createPost = async (formData: FormData) => {
   const authorId = authGuard();
   const id = randomUUID();
   const validatedData = PostSchema.parse({
-    title: formData.get('title'),
     body: formData.get('body'),
   });
   const newData: Prisma.PostUncheckedCreateInput = {
@@ -106,7 +104,7 @@ export const getOwnPost = async (id: string) => {
   });
 };
 
-export const getPosts = async () => {
+export const getPosts = cache(async () => {
   return db.post.findMany({
     take: 10,
     orderBy: {
@@ -116,11 +114,11 @@ export const getPosts = async () => {
       author: true,
     },
   });
-};
+});
 
-export const getPostCount = async () => {
+export const getPostCount = cache(async () => {
   return db.post.count();
-};
+});
 
 export const hasLike = cache(async (id: string) => {
   const uid = authGuard();
@@ -197,14 +195,14 @@ const getUserPosts = cache(async (id: string) => {
   });
 });
 
-export const getMyPosts = async () => {
+export const getMyPosts = cache(async () => {
   const uid = authGuard();
   const posts = await getUserPosts(uid);
 
   return posts;
-};
+});
 
-export const getMyLikes = async () => {
+export const getMyLikes = cache(async () => {
   const id = authGuard();
   const user = await db.user.findFirst({
     where: {
@@ -220,4 +218,4 @@ export const getMyLikes = async () => {
   });
 
   return user?.likes;
-};
+});

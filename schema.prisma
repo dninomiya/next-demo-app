@@ -19,7 +19,6 @@ model User {
 model Post {
   id           String   @id
   thumbnailURL String?
-  title        String   @db.VarChar(240)
   body         String   @db.VarChar(140)
   likes        User[]   @relation("PostLikes")
   author       User     @relation(fields: [authorId], references: [id])

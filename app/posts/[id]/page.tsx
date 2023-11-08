@@ -21,7 +21,6 @@ export default async function Page({
 
   return (
     <article>
-      <h1 className="font-bold text-lg">{post.title}</h1>
       <p className="text-muted-foreground mb-4">
         <time>{format(post.createdAt, 'yyyy年M月d日 HH:mm:ss')}</time>
       </p>

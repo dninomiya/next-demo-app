@@ -2,8 +2,7 @@ import { hasLike } from '@/app/actions/post';
 import LikeButton from '@/app/components/like-button';
 import RelativeTimestamp from '@/app/components/relative-timestamp';
 import { auth } from '@clerk/nextjs';
-import { Post, Prisma } from '@prisma/client';
-import { format } from 'date-fns';
+import { Prisma } from '@prisma/client';
 import { User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -29,10 +28,7 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
           />
         </div>
       )}
-      <h2 className="font-bold mb-1">
-        <Link href={`/posts/${post.id}`}>{post.title}</Link>
-      </h2>
-      <div className="flex mb-2">
+      <div className="flex items-center mb-2">
         <div className="w-12 h-12 rounded-full grid place-content-center overflow-hidden bg-gray-100 mr-2">
           {post.author.profileImageURL ? (
             <Image
@@ -47,8 +43,8 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
           )}
         </div>
         <div className="flex-1">
-          <p className="mb-1 font-semibold">{post.author.name}</p>
-          <p className="text-muted-foreground">
+          <p className="mb-2 leading-none font-semibold">{post.author.name}</p>
+          <p className="text-muted-foreground leading-none text-sm">
             <RelativeTimestamp date={post.createdAt} />
           </p>
         </div>

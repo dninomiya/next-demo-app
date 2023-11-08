@@ -11,12 +11,10 @@ export default async function PostForm({ editId }: { editId?: string }) {
 
   const defaultValue = oldPost
     ? {
-        title: oldPost.title,
         body: oldPost.body,
       }
     : {
-        title: faker.lorem.sentence(),
-        body: faker.lorem.paragraphs(4, '\n\n'),
+        body: faker.lorem.paragraphs(),
       };
 
   return (
@@ -46,16 +44,6 @@ export default async function PostForm({ editId }: { editId?: string }) {
         />
       </div>
 
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="title">タイトル*</Label>
-        <Input
-          type="text"
-          id="title"
-          defaultValue={defaultValue.title}
-          required
-          name="title"
-        />
-      </div>
       <div className="grid w-full gap-1.5">
         <Label htmlFor="body">本文*</Label>
         <Textarea
