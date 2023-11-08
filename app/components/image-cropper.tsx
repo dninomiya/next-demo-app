@@ -40,15 +40,15 @@ export default function ImageCropper({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const cropImage = () => {
-    const dataUrl = editor.current?.getImage().toDataURL();
-    inputRef.current!.value = dataUrl!;
+    const dataUrl = editor.current?.getImage().toDataURL('image/png');
     setOpen(false);
     setPreview(dataUrl);
+    inputRef.current!.value = dataUrl!;
   };
 
   return (
     <div>
-      {/* <input type="hidden" ref={inputRef} name={name} /> */}
+      <input type="hidden" ref={inputRef} name={name} />
       <div
         className={cn(
           'border overflow-hidden cursor-pointer rounded-md grid place-content-center relative',

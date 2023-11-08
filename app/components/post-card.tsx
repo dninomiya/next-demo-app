@@ -1,18 +1,15 @@
 import { hasLike } from '@/app/actions/post';
 import LikeButton from '@/app/components/like-button';
 import RelativeTimestamp from '@/app/components/relative-timestamp';
-import { auth } from '@clerk/nextjs';
 import { Prisma } from '@prisma/client';
 import { User } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 type PostWithOwner = Prisma.PostGetPayload<{
   include: { author: true };
 }>;
 
 export default async function PostCard({ post }: { post: PostWithOwner }) {
-  const { userId } = auth();
   const liked = await hasLike(post.id);
 
   return (

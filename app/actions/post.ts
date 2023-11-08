@@ -2,6 +2,7 @@
 
 import { authGuard } from '@/app/actions/auth';
 import { db } from '@/app/actions/lib';
+import { dataURLtoBuffer } from '@/lib/utils';
 import { Prisma } from '@prisma/client';
 import { put } from '@vercel/blob';
 import { randomUUID } from 'crypto';
@@ -26,9 +27,10 @@ export const createPost = async (formData: FormData) => {
     authorId,
   };
 
-  const file = formData.get('thumbnail') as string;
+  const thumbnailDataURL = formData.get('thumbnail') as string;
 
-  if (file) {
+  if (thumbnailDataURL) {
+    const file = dataURLtoBuffer(thumbnailDataURL);
     const blob = await put(`posts/${id}/thumbnail.png`, file, {
       access: 'public',
     });
@@ -52,9 +54,10 @@ export const updatePost = async (id: string, formData: FormData) => {
     body: validatedData.body,
   };
 
-  const file = formData.get('thumbnail') as string;
+  const thumbnailDataURL = formData.get('thumbnail') as string;
 
-  if (file) {
+  if (thumbnailDataURL) {
+    const file = dataURLtoBuffer(thumbnailDataURL);
     const blob = await put(`posts/${id}/thumbnail.png`, file, {
       access: 'public',
     });
