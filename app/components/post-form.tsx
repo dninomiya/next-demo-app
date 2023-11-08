@@ -20,6 +20,7 @@ export default async function PostForm({ editId }: { editId?: string }) {
   return (
     <form action={editId ? updatePost.bind(null, editId) : createPost}>
       <div className="space-y-6">
+        <p>{oldPost?.thumbnailURL}</p>
         {oldPost?.thumbnailURL && (
           <div className="aspect-video relative max-w-sm">
             <Image

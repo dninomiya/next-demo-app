@@ -21,7 +21,7 @@ model Post {
   thumbnailURL String?
   body         String   @db.VarChar(140)
   likes        User[]   @relation("PostLikes")
-  author       User     @relation(fields: [authorId], references: [id])
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId     String
   createdAt    DateTime @default(now())
 }

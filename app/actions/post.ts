@@ -1,10 +1,9 @@
 'use server';
 
 import { authGuard } from '@/app/actions/auth';
-import { db } from '@/app/actions/lib';
-import { dataURLtoBuffer } from '@/lib/utils';
+import { db, putImage } from '@/app/actions/lib';
 import { Prisma } from '@prisma/client';
-import { put } from '@vercel/blob';
+import { del } from '@vercel/blob';
 import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -30,11 +29,10 @@ export const createPost = async (formData: FormData) => {
   const thumbnailDataURL = formData.get('thumbnail') as string;
 
   if (thumbnailDataURL) {
-    const file = dataURLtoBuffer(thumbnailDataURL);
-    const blob = await put(`posts/${id}/thumbnail.png`, file, {
-      access: 'public',
-    });
-    newData.thumbnailURL = blob.url;
+    newData.thumbnailURL = await putImage(
+      thumbnailDataURL,
+      `posts/${id}/thumbnail.png`
+    );
   }
 
   await db.post.create({
@@ -57,11 +55,10 @@ export const updatePost = async (id: string, formData: FormData) => {
   const thumbnailDataURL = formData.get('thumbnail') as string;
 
   if (thumbnailDataURL) {
-    const file = dataURLtoBuffer(thumbnailDataURL);
-    const blob = await put(`posts/${id}/thumbnail.png`, file, {
-      access: 'public',
-    });
-    newData.thumbnailURL = blob.url;
+    newData.thumbnailURL = await putImage(
+      thumbnailDataURL,
+      `posts/${id}/thumbnail.png`
+    );
   }
 
   await db.post.update({
@@ -78,15 +75,17 @@ export const updatePost = async (id: string, formData: FormData) => {
 export const deletePost = async (id: string) => {
   const uid = authGuard();
 
-  await db.post.delete({
-    where: {
-      id,
-      authorId: uid,
-    },
-  });
+  // await db.post.delete({
+  //   where: {
+  //     id,
+  //     authorId: uid,
+  //   },
+  // });
+
+  await del(`posts/${id}/thumbnail.png`);
 
   revalidatePath('/');
-  redirect('/');
+  // redirect('/');
 };
 
 export const getPost = async (id: string) => {

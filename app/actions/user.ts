@@ -1,10 +1,9 @@
 'use server';
 
 import { authGuard } from '@/app/actions/auth';
-import { db } from '@/app/actions/lib';
+import { db, putImage } from '@/app/actions/lib';
 import { clerkClient } from '@clerk/nextjs';
 import { Prisma } from '@prisma/client';
-import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { cache } from 'react';
 import { z } from 'zod';
@@ -39,13 +38,13 @@ export const createUser = async (formData: FormData) => {
     id,
   };
 
-  const file = formData.get('profileImage') as File;
+  const profileImageDataURL = formData.get('profileImage') as string;
 
-  if (file?.size > 0) {
-    const blob = await put(`profileImage/${id}/${file.name}`, file, {
-      access: 'public',
-    });
-    data.profileImageURL = blob.url;
+  if (profileImageDataURL) {
+    data.profileImageURL = await putImage(
+      profileImageDataURL,
+      `profileImage/${id}/image.png`
+    );
   }
 
   await db.user.create({
@@ -70,13 +69,13 @@ export const updateUser = async (formData: FormData) => {
     ...validatedData,
   };
 
-  const file = formData.get('profileImage') as File;
+  const profileImageDataURL = formData.get('profileImage') as string;
 
-  if (file?.size > 0) {
-    const blob = await put(`profileImage/${id}/${file.name}`, file, {
-      access: 'public',
-    });
-    data.profileImageURL = blob.url;
+  if (profileImageDataURL) {
+    data.profileImageURL = await putImage(
+      profileImageDataURL,
+      `profileImage/${id}/image.png`
+    );
   }
 
   await db.user.update({
