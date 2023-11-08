@@ -28,11 +28,7 @@ export default async function Page({
 
       <div className="border-t pt-4 mt-6">
         {userId === post.authorId && (
-          <Button
-            formAction={deletePost.bind(null, id)}
-            variant="ghost"
-            asChild
-          >
+          <Button variant="ghost" asChild>
             <Link href={`/posts/${id}/edit`}>編集</Link>
           </Button>
         )}

@@ -72,20 +72,22 @@ export const updatePost = async (id: string, formData: FormData) => {
   revalidatePath('/');
 };
 
-export const deletePost = async (id: string) => {
+export const deletePost = async (id: string, imageURL?: string | null) => {
   const uid = authGuard();
 
-  // await db.post.delete({
-  //   where: {
-  //     id,
-  //     authorId: uid,
-  //   },
-  // });
+  await db.post.delete({
+    where: {
+      id,
+      authorId: uid,
+    },
+  });
 
-  await del(`posts/${id}/thumbnail.png`);
+  if (imageURL) {
+    await del(imageURL);
+  }
 
   revalidatePath('/');
-  // redirect('/');
+  redirect('/');
 };
 
 export const getPost = async (id: string) => {
