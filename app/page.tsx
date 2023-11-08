@@ -1,9 +1,8 @@
-import { getPostCount, getPosts } from '@/app/actions/post';
+import { getPosts } from '@/app/actions/post';
 import PostCard from '@/app/components/post-card';
 
 export default async function Page() {
   const posts = await getPosts();
-  const count = await getPostCount();
 
   return (
     <div>

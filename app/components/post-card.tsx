@@ -2,9 +2,9 @@ import { hasLike } from '@/app/actions/post';
 import LikeButton from '@/app/components/like-button';
 import RelativeTimestamp from '@/app/components/relative-timestamp';
 import { Button } from '@/components/ui/button';
-import { auth } from '@clerk/nextjs';
+import { SignedIn, auth } from '@clerk/nextjs';
 import { Prisma } from '@prisma/client';
-import { Edit, Pen, User } from 'lucide-react';
+import { Pen, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -13,7 +13,6 @@ type PostWithOwner = Prisma.PostGetPayload<{
 }>;
 
 export default async function PostCard({ post }: { post: PostWithOwner }) {
-  const liked = await hasLike(post.id);
   const { userId } = auth();
 
   return (
@@ -54,7 +53,7 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
       <p>{post.body}</p>
 
       <div className="flex gap-2 justify-end mt-2">
-        <LikeButton id={post.id} hasLike={liked} />
+        {userId && <LikeButton id={post.id} hasLike={await hasLike(post.id)} />}
         {userId === post.authorId && (
           <Button size="icon" variant="ghost" asChild>
             <Link href={`/posts/${post.id}/edit`}>
