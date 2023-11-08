@@ -2,6 +2,7 @@ import { deletePost, getPost } from '@/app/actions/post';
 import { Button } from '@/components/ui/button';
 import { auth } from '@clerk/nextjs';
 import { format } from 'date-fns';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import React from 'react';
 
@@ -27,13 +28,18 @@ export default async function Page({
       </p>
       <p className="whitespace-pre-line">{post.body}</p>
 
-      {userId === post.authorId && (
-        <form className="border-t pt-4 mt-6">
-          <Button formAction={deletePost.bind(null, id)} variant="ghost">
-            記事を削除
-          </Button>
-        </form>
-      )}
+      <div className="flex gap-2 border-t pt-4 mt-6">
+        {userId === post.authorId && (
+          <form>
+            <Button formAction={deletePost.bind(null, id)} variant="ghost">
+              記事を削除
+            </Button>
+          </form>
+        )}
+        <Button formAction={deletePost.bind(null, id)} variant="ghost" asChild>
+          <Link href={`/posts/${id}/edit`}>編集</Link>
+        </Button>
+      </div>
     </article>
   );
 }

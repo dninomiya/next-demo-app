@@ -45,17 +45,15 @@ export const createPost = async (formData: FormData) => {
   redirect('/');
 };
 
-export const updatePost = async (
-  id: string,
-  file: File | undefined,
-  formData: FormData
-) => {
+export const updatePost = async (id: string, formData: FormData) => {
   const uid = authGuard();
   const validatedData = PostSchema.parse({
     name: formData.get('name'),
     avatarId: formData.get('avatarId'),
   });
   const newData: Prisma.PostUncheckedUpdateInput = validatedData;
+
+  const file = formData.get('thumbnail') as File;
 
   if (file) {
     const blob = await put(file.name, file, {

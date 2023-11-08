@@ -1,13 +1,23 @@
-import { createUser } from '@/app/actions/user';
+import { createUser, currentUser, updateUser } from '@/app/actions/user';
 import SubmitButton from '@/app/onboarding/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { faker } from '@faker-js/faker';
 
-export default function UserForm() {
+export default async function UserForm({ editMode }: { editMode?: boolean }) {
+  const defaultValue = editMode
+    ? {
+        name: faker.internet.userName(),
+      }
+    : {
+        name: (await currentUser()).name,
+      };
+
   return (
-    <form action={createUser}>
-      <h1 className="font-bold text-xl mb-4">ユーザーを作成する</h1>
+    <form action={editMode ? updateUser : createUser}>
+      <h1 className="font-bold text-xl mb-4">
+        プロフィールを{editMode ? '更新' : '作成'}する
+      </h1>
 
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="profileIMage">プロフィール画像</Label>
@@ -26,7 +36,7 @@ export default function UserForm() {
           <Input
             type="text"
             id="name"
-            defaultValue={faker.internet.userName()}
+            defaultValue={defaultValue.name}
             required
             name="name"
           />
