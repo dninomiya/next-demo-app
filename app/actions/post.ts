@@ -4,8 +4,10 @@ import { authGuard } from '@/app/actions/auth';
 import { db } from '@/app/actions/lib';
 import { Prisma } from '@prisma/client';
 import { put } from '@vercel/blob';
+import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { cache } from 'react';
 import { z } from 'zod';
 
 const PostSchema = z.object({
@@ -15,27 +17,28 @@ const PostSchema = z.object({
 
 export const createPost = async (formData: FormData) => {
   const authorId = authGuard();
+  const id = randomUUID();
   const validatedData = PostSchema.parse({
     title: formData.get('title'),
     body: formData.get('body'),
   });
-  let thumbnailURL;
+  const newData: Prisma.PostUncheckedCreateInput = {
+    ...validatedData,
+    id,
+    authorId,
+  };
 
   const file = formData.get('thumbnail') as File;
 
-  if (file) {
-    const blob = await put(file.name, file, {
+  if (file?.size > 0) {
+    const blob = await put(`posts/${id}/${file.name}`, file, {
       access: 'public',
     });
-    thumbnailURL = blob.url;
+    newData.thumbnailURL = blob.url;
   }
 
   await db.post.create({
-    data: {
-      ...validatedData,
-      thumbnailURL: thumbnailURL || undefined,
-      authorId,
-    },
+    data: newData,
   });
 
   revalidatePath('/');
@@ -83,6 +86,7 @@ export const deletePost = async (id: string) => {
   });
 
   revalidatePath('/');
+  redirect('/');
 };
 
 export const getPost = async (id: string) => {
@@ -99,9 +103,109 @@ export const getPosts = async () => {
     orderBy: {
       createdAt: 'desc',
     },
+    include: {
+      author: true,
+    },
   });
 };
 
 export const getPostCount = async () => {
   return db.post.count();
+};
+
+export const hasLike = cache(async (id: string) => {
+  const uid = authGuard();
+  const post = await db.post.findFirst({
+    where: {
+      id,
+      likes: {
+        some: {
+          id: uid,
+        },
+      },
+    },
+  });
+
+  return !!post;
+});
+
+export const toggleLike = async (id: string) => {
+  const uid = authGuard();
+  const hasLike = await db.post.findFirst({
+    where: {
+      id,
+      likes: {
+        some: {
+          id: uid,
+        },
+      },
+    },
+  });
+
+  if (hasLike) {
+    await db.post.update({
+      where: {
+        id,
+      },
+      data: {
+        likes: {
+          disconnect: {
+            id: uid,
+          },
+        },
+      },
+    });
+  } else {
+    await db.post.update({
+      where: {
+        id,
+      },
+      data: {
+        likes: {
+          connect: {
+            id: uid,
+          },
+        },
+      },
+    });
+  }
+
+  revalidatePath('/');
+};
+
+// const getUserPosts = unstable_cache(
+//   async (id: string) => {
+//     return db.post.findMany({
+//       where: {
+//         authorId: id,
+//       },
+//       take: 10,
+//       orderBy: {
+//         createdAt: 'desc',
+//       },
+//     });
+//   },
+//   ['user-posts']
+// );
+
+const getUserPosts = cache(async (id: string) => {
+  return db.post.findMany({
+    where: {
+      authorId: id,
+    },
+    take: 10,
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      author: true,
+    },
+  });
+});
+
+export const getMyPosts = async () => {
+  const uid = authGuard();
+  const posts = await getUserPosts(uid);
+
+  return posts;
 };

@@ -9,16 +9,19 @@ datasource db {
 }
 
 model User {
-  id    String @id
-  name  String @db.VarChar(240)
-  posts Post[]
+  id              String  @id
+  name            String  @db.VarChar(240)
+  profileImageURL String?
+  posts           Post[]
+  likes           Post[]  @relation("PostLikes")
 }
 
 model Post {
-  id           String   @id @default(cuid())
+  id           String   @id
   thumbnailURL String?
   title        String   @db.VarChar(240)
   body         String   @db.VarChar(140)
+  likes        User[]   @relation("PostLikes")
   author       User     @relation(fields: [authorId], references: [id])
   authorId     String
   createdAt    DateTime @default(now())

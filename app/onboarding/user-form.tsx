@@ -1,5 +1,7 @@
 import { createUser } from '@/app/actions/user';
 import SubmitButton from '@/app/onboarding/submit-button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { faker } from '@faker-js/faker';
 
 export default function UserForm() {
@@ -7,21 +9,31 @@ export default function UserForm() {
     <form action={createUser}>
       <h1 className="font-bold text-xl mb-4">ユーザーを作成する</h1>
 
-      <div className="p-8 border rounded-xl shadow-sm">
-        <h2>ユーザーを作成</h2>
-        <p className="text-muted-foreground mb-6">いつでも消せます</p>
-
-        <h3>名前</h3>
-        <input
-          name="name"
-          defaultValue={faker.internet.userName()}
-          className="border rounded-md px-2 py-1"
-          type="text"
-          required
+      <div className="grid w-full max-w-sm items-center gap-1.5">
+        <Label htmlFor="profileIMage">プロフィール画像</Label>
+        <Input
+          id="profileIMage"
+          name="profileIMage"
+          defaultValue=""
+          type="file"
+          accept="image/png,image/jpeg"
         />
       </div>
 
-      <SubmitButton>ユーザーを作成する</SubmitButton>
+      <div className="space-y-6">
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="name">名前</Label>
+          <Input
+            type="text"
+            id="name"
+            defaultValue={faker.internet.userName()}
+            required
+            name="name"
+          />
+        </div>
+
+        <SubmitButton>ユーザーを作成する</SubmitButton>
+      </div>
     </form>
   );
 }

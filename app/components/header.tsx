@@ -6,7 +6,9 @@ import Link from 'next/link';
 export default function Header() {
   return (
     <header className="flex gap-2 items-center h-14 border-b px-6">
-      <span className="font-black text-xl">DEMO</span>
+      <Link href="/" className="font-black text-xl">
+        DEMO
+      </Link>
       <span className="flex-1"></span>
       <SignedIn>
         <Button asChild>

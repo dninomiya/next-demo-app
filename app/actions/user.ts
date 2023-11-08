@@ -3,6 +3,8 @@
 import { authGuard } from '@/app/actions/auth';
 import { db } from '@/app/actions/lib';
 import { clerkClient } from '@clerk/nextjs';
+import { Prisma } from '@prisma/client';
+import { put } from '@vercel/blob';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -16,9 +18,6 @@ export const currentUser = async () => {
     where: {
       id: uid,
     },
-    include: {
-      posts: true,
-    },
   });
 
   if (!user) {
@@ -30,9 +29,18 @@ export const currentUser = async () => {
 
 export const createUser = async (formData: FormData) => {
   const uid = authGuard();
-  const validatedData = UserSchema.parse({
+  const validatedData: Prisma.UserUncheckedUpdateInput = UserSchema.parse({
     name: formData.get('name'),
   });
+
+  const file = formData.get('profileImage') as File;
+
+  if (file?.size > 0) {
+    const blob = await put(`profileImage/${uid}/${file.name}`, file, {
+      access: 'public',
+    });
+    validatedData.profileImageURL = blob.url;
+  }
 
   await db.user.create({
     data: {

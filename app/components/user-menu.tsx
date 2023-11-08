@@ -2,13 +2,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SignOutButton } from '@clerk/nextjs';
 import { currentUser } from '@clerk/nextjs/server';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -30,6 +29,12 @@ export default async function UserMenu() {
             <User className="mr-2" size={20} />
             マイページ
           </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <a href="https://driving-raven-64.accounts.dev/user">
+            <Settings className="mr-2" size={20} />
+            アカウント設定
+          </a>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <SignOutButton>
