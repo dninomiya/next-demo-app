@@ -1,4 +1,4 @@
-import { createPost, getPost, updatePost } from '@/app/actions/post';
+import { createPost, getOwnPost, updatePost } from '@/app/actions/post';
 import SubmitButton from '@/app/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -7,7 +7,7 @@ import { faker } from '@faker-js/faker';
 import Image from 'next/image';
 
 export default async function PostForm({ editId }: { editId?: string }) {
-  const oldPost = editId ? await getPost(editId) : null;
+  const oldPost = editId ? await getOwnPost(editId) : null;
 
   const defaultValue = oldPost
     ? {

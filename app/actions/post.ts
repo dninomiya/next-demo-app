@@ -46,7 +46,7 @@ export const createPost = async (formData: FormData) => {
 };
 
 export const updatePost = async (id: string, formData: FormData) => {
-  const uid = authGuard();
+  const authorId = authGuard();
   const validatedData = PostSchema.parse({
     name: formData.get('name'),
     avatarId: formData.get('avatarId'),
@@ -65,7 +65,7 @@ export const updatePost = async (id: string, formData: FormData) => {
   await db.post.update({
     where: {
       id,
-      authorId: uid,
+      authorId,
     },
     data: newData,
   });
@@ -91,6 +91,17 @@ export const getPost = async (id: string) => {
   return db.post.findFirst({
     where: {
       id,
+    },
+  });
+};
+
+export const getOwnPost = async (id: string) => {
+  const authorId = authGuard();
+
+  return db.post.findFirst({
+    where: {
+      id,
+      authorId,
     },
   });
 };
@@ -170,21 +181,6 @@ export const toggleLike = async (id: string) => {
 
   revalidatePath('/');
 };
-
-// const getUserPosts = unstable_cache(
-//   async (id: string) => {
-//     return db.post.findMany({
-//       where: {
-//         authorId: id,
-//       },
-//       take: 10,
-//       orderBy: {
-//         createdAt: 'desc',
-//       },
-//     });
-//   },
-//   ['user-posts']
-// );
 
 const getUserPosts = cache(async (id: string) => {
   return db.post.findMany({

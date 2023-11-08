@@ -11,7 +11,7 @@ export default function Header() {
       </Link>
       <span className="flex-1"></span>
       <SignedIn>
-        <Button asChild>
+        <Button size="sm" asChild>
           <Link href="/create">記事作成</Link>
         </Button>
         <UserMenu />
