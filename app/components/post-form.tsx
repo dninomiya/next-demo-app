@@ -1,6 +1,6 @@
 import { createPost, getOwnPost, updatePost } from '@/app/actions/post';
+import ImageCropper from '@/app/components/image-cropper';
 import SubmitButton from '@/app/components/submit-button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { faker } from '@faker-js/faker';
@@ -14,18 +14,14 @@ export default async function PostForm({ editId }: { editId?: string }) {
         body: oldPost.body,
       }
     : {
-        body: faker.lorem.paragraphs(),
+        body: faker.lorem.sentence(4),
       };
 
   return (
-    <form
-      action={editId ? updatePost.bind(null, editId) : createPost}
-      className="space-y-6"
-    >
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="thumbnail">カバー画像</Label>
+    <form action={editId ? updatePost.bind(null, editId) : createPost}>
+      <div className="space-y-6">
         {oldPost?.thumbnailURL && (
-          <div className="aspect-video relative">
+          <div className="aspect-video relative max-w-sm">
             <Image
               src={oldPost.thumbnailURL}
               className="object-cover"
@@ -35,28 +31,25 @@ export default async function PostForm({ editId }: { editId?: string }) {
             />
           </div>
         )}
-        <Input
-          id="thumbnail"
-          name="thumbnail"
-          defaultValue=""
-          type="file"
-          accept="image/png,image/jpeg"
-        />
-      </div>
 
-      <div className="grid w-full gap-1.5">
-        <Label htmlFor="body">本文*</Label>
-        <Textarea
-          maxLength={140}
-          name="body"
-          placeholder=""
-          defaultValue={defaultValue.body}
-          id="body"
-          required
-        />
-      </div>
-      <div>
-        <SubmitButton>{editId ? '更新' : '作成'}</SubmitButton>
+        <div className="w-80">
+          <ImageCropper name="thumbnail" width={800} aspectRatio={16 / 9} />
+        </div>
+
+        <div className="grid w-full gap-1.5">
+          <Label htmlFor="body">本文*</Label>
+          <Textarea
+            maxLength={140}
+            name="body"
+            placeholder=""
+            defaultValue={defaultValue.body}
+            id="body"
+            required
+          />
+        </div>
+        <div>
+          <SubmitButton>{editId ? '更新' : '作成'}</SubmitButton>
+        </div>
       </div>
     </form>
   );

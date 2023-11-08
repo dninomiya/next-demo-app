@@ -26,10 +26,10 @@ export const createPost = async (formData: FormData) => {
     authorId,
   };
 
-  const file = formData.get('thumbnail') as File;
+  const file = formData.get('thumbnail') as string;
 
-  if (file?.size > 0) {
-    const blob = await put(`posts/${id}/${file.name}`, file, {
+  if (file) {
+    const blob = await put(`posts/${id}/thumbnail.png`, file, {
       access: 'public',
     });
     newData.thumbnailURL = blob.url;
@@ -46,15 +46,16 @@ export const createPost = async (formData: FormData) => {
 export const updatePost = async (id: string, formData: FormData) => {
   const authorId = authGuard();
   const validatedData = PostSchema.parse({
-    name: formData.get('name'),
-    avatarId: formData.get('avatarId'),
+    body: formData.get('body'),
   });
-  const newData: Prisma.PostUncheckedUpdateInput = validatedData;
+  const newData: Prisma.PostUncheckedUpdateInput = {
+    body: validatedData.body,
+  };
 
-  const file = formData.get('thumbnail') as File;
+  const file = formData.get('thumbnail') as string;
 
   if (file) {
-    const blob = await put(file.name, file, {
+    const blob = await put(`posts/${id}/thumbnail.png`, file, {
       access: 'public',
     });
     newData.thumbnailURL = blob.url;

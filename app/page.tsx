@@ -7,8 +7,6 @@ export default async function Page() {
 
   return (
     <div>
-      <h1 className="font-bold text-2xl mb-2">最新の10件</h1>
-      <p className="mb-6 text-muted-foreground">全{count}件</p>
       {posts.length > 0 ? (
         <ul className="divide-y">
           {posts.map((post) => {

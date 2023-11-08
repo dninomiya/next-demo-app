@@ -29,7 +29,7 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
         </div>
       )}
       <div className="flex items-center mb-2">
-        <div className="w-12 h-12 rounded-full grid place-content-center overflow-hidden bg-gray-100 mr-2">
+        <div className="w-12 h-12 rounded-full grid place-content-center overflow-hidden bg-gray-100 mr-3">
           {post.author.profileImageURL ? (
             <Image
               sizes="48px"
@@ -50,9 +50,9 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
         </div>
       </div>
 
-      <p className="truncate">{post.body}</p>
+      <p>{post.body}</p>
 
-      {post.authorId !== userId && <LikeButton id={post.id} hasLike={liked} />}
+      <LikeButton id={post.id} hasLike={liked} />
     </div>
   );
 }

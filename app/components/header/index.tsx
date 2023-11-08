@@ -1,4 +1,4 @@
-import UserMenu from '@/app/components/user-menu';
+import UserMenu from '@/app/components/header/user-menu';
 import { Button } from '@/components/ui/button';
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from '@clerk/nextjs';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ export default function Header() {
       <span className="flex-1"></span>
       <SignedIn>
         <Button size="sm" asChild>
-          <Link href="/create">記事作成</Link>
+          <Link href="/create">ポストする</Link>
         </Button>
         <UserMenu />
       </SignedIn>
