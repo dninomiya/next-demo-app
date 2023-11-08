@@ -1,5 +1,6 @@
 import { deletePost } from '@/app/actions/post';
 import PostForm from '@/app/components/post-form';
+import SubmitButton from '@/app/components/submit-button';
 import { Button } from '@/components/ui/button';
 import React from 'react';
 
@@ -13,10 +14,8 @@ export default function Page({
   return (
     <div>
       <PostForm editId={id} />
-      <form>
-        <Button formAction={deletePost.bind(null, id)} variant="ghost">
-          記事を削除
-        </Button>
+      <form action={deletePost.bind(null, id)} className="border-t pt-4 mt-4">
+        <SubmitButton variant="destructive">記事を削除</SubmitButton>
       </form>
     </div>
   );

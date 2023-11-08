@@ -1,5 +1,5 @@
 import { createUser, currentUser, updateUser } from '@/app/actions/user';
-import SubmitButton from '@/app/onboarding/submit-button';
+import SubmitButton from '@/app/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { faker } from '@faker-js/faker';

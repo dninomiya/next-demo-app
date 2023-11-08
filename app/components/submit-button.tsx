@@ -1,15 +1,20 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button, ButtonProps } from '@/components/ui/button';
 import React from 'react';
 import { useFormStatus } from 'react-dom';
 
 export default function SubmitButton({
   children,
+  ...props
 }: {
   children: React.ReactNode;
-}) {
+} & ButtonProps) {
   const { pending } = useFormStatus();
 
-  return <Button disabled={pending}>{children}</Button>;
+  return (
+    <Button {...props} disabled={pending}>
+      {children}
+    </Button>
+  );
 }

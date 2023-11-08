@@ -203,3 +203,21 @@ export const getMyPosts = async () => {
 
   return posts;
 };
+
+export const getMyLikes = async () => {
+  const id = authGuard();
+  const user = await db.user.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      likes: {
+        include: {
+          author: true,
+        },
+      },
+    },
+  });
+
+  return user?.likes;
+};
