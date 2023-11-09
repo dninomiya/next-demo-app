@@ -31,7 +31,7 @@ export default async function PostForm({ editId }: { editId?: string }) {
               <Image
                 src={oldPost.thumbnailURL}
                 className="object-cover"
-                sizes="800pxx"
+                sizes="800px"
                 alt=""
                 fill
               />

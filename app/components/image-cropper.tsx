@@ -39,11 +39,12 @@ export default function ImageCropper({
   const [open, setOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const cropImage = () => {
+  const cropImage = async () => {
     const dataUrl = editor.current?.getImage().toDataURL('image/png');
+    const result = await resizeBase64Img(dataUrl!, width, width / aspectRatio);
     setOpen(false);
-    setPreview(dataUrl);
-    inputRef.current!.value = dataUrl!;
+    setPreview(result);
+    inputRef.current!.value = result!;
   };
 
   return (
@@ -90,8 +91,8 @@ export default function ImageCropper({
                 className="absolute max-w-full max-h-full inset-0"
                 scale={scale}
                 ref={editor}
-                width={width}
-                height={width / aspectRatio}
+                width={1000}
+                height={1000 / aspectRatio}
                 image={image}
               />
             )}
@@ -117,4 +118,25 @@ export default function ImageCropper({
       </Dialog>
     </div>
   );
+}
+
+function resizeBase64Img(base64: string, width: number, height: number) {
+  return new Promise<string>((resolve, reject) => {
+    const img = document.createElement('img');
+
+    img.onload = function () {
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx!.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL());
+    };
+
+    img.onerror = function (err) {
+      reject(err);
+    };
+
+    img.src = base64;
+  });
 }
