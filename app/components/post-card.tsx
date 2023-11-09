@@ -2,7 +2,7 @@ import { hasLike } from '@/app/actions/post';
 import LikeButton from '@/app/components/like-button';
 import RelativeTimestamp from '@/app/components/relative-timestamp';
 import { Button } from '@/components/ui/button';
-import { SignedIn, auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs';
 import { Prisma } from '@prisma/client';
 import { Pen, User } from 'lucide-react';
 import Image from 'next/image';
