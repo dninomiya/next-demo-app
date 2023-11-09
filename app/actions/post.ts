@@ -90,13 +90,13 @@ export const deletePost = async (id: string, imageURL?: string | null) => {
   redirect('/');
 };
 
-export const getPost = async (id: string) => {
+export const getPost = cache(async (id: string) => {
   return db.post.findFirst({
     where: {
       id,
     },
   });
-};
+});
 
 export const getOwnPost = async (id: string) => {
   const authorId = authGuard();

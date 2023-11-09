@@ -55,7 +55,7 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
       <div className="flex gap-2 justify-end mt-2">
         {userId && <LikeButton id={post.id} hasLike={await hasLike(post.id)} />}
         {userId === post.authorId && (
-          <Button size="icon" variant="ghost" asChild>
+          <Button size="icon" variant="ghost" className="rounded-full" asChild>
             <Link href={`/posts/${post.id}/edit`}>
               <Pen size={20} />
             </Link>
