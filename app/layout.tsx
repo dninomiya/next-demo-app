@@ -1,12 +1,12 @@
+import { AppConfig } from '@/app.config';
 import Browser from '@/app/components/browser';
 import Footer from '@/app/components/footer';
+import GithubLink from '@/app/components/github-link';
+import Header from '@/app/components/header';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import './globals.css';
-import Header from '@/app/components/header';
-import GithubLink from '@/app/components/github-link';
-import { AppConfig } from '@/app.config';
 
 export const metadata: Metadata = {
   title: AppConfig.title,

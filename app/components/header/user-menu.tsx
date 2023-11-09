@@ -23,7 +23,7 @@ export default async function UserMenu() {
           )}
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <Link href="/mypage">
             <User className="mr-2" size={20} />

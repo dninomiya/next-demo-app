@@ -43,8 +43,10 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
           )}
         </div>
         <div className="flex-1">
-          <p className="mb-2 leading-none font-semibold">{post.author.name}</p>
-          <p className="text-muted-foreground leading-none text-sm">
+          <p className="mb-2 leading-none text-gray-700 font-semibold">
+            {post.author.name}
+          </p>
+          <p className="text-muted-foreground text-gray-700 leading-none text-sm">
             <RelativeTimestamp date={post.createdAt} />
           </p>
         </div>
@@ -52,7 +54,7 @@ export default async function PostCard({ post }: { post: PostWithOwner }) {
 
       <p>{post.body}</p>
 
-      <div className="flex gap-2 justify-end mt-2">
+      <div className="flex gap-2 text-gray-500 justify-end mt-2">
         {userId && <LikeButton id={post.id} hasLike={await hasLike(post.id)} />}
         {userId === post.authorId && (
           <Button size="icon" variant="ghost" className="rounded-full" asChild>
