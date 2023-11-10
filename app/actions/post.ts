@@ -3,7 +3,6 @@
 import { authGuard } from '@/app/actions/auth';
 import { db, putImage } from '@/app/actions/lib';
 import { Prisma } from '@prisma/client';
-import { del, list } from '@vercel/blob';
 import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -83,7 +82,7 @@ export const deletePost = async (id: string, imageURL?: string | null) => {
   });
 
   if (imageURL) {
-    await del(imageURL);
+    // await del(imageURL);
   }
 
   revalidatePath('/');

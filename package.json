@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.445.0",
     "@clerk/nextjs": "^4.26.2",
     "@prisma/client": "^5.5.2",
     "@radix-ui/react-dialog": "^1.0.5",
