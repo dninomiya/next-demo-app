@@ -1,7 +1,7 @@
 'use server';
 
 import { authGuard } from '@/app/actions/auth';
-import { db, putImage } from '@/app/actions/lib';
+import { db, deleteImage, putImage } from '@/app/actions/lib';
 import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { revalidatePath } from 'next/cache';
@@ -52,12 +52,14 @@ export const updatePost = async (id: string, formData: FormData) => {
   };
 
   const thumbnailDataURL = formData.get('thumbnail') as string;
+  const thumbnailAction = formData.get('thumbnail-action') as string;
+  const imagePath = `posts/${id}/thumbnail.png`;
 
-  if (thumbnailDataURL) {
-    newData.thumbnailURL = await putImage(
-      thumbnailDataURL,
-      `posts/${id}/thumbnail.png`
-    );
+  if (thumbnailDataURL && thumbnailAction === 'save') {
+    newData.thumbnailURL = await putImage(thumbnailDataURL, imagePath);
+  } else if (thumbnailAction === 'delete') {
+    newData.thumbnailURL = null;
+    await deleteImage(imagePath);
   }
 
   await db.post.update({
@@ -82,7 +84,7 @@ export const deletePost = async (id: string, imageURL?: string | null) => {
   });
 
   if (imageURL) {
-    // await del(imageURL);
+    deleteImage(imageURL.replace(process.env.IMAGE_HOST_URL as string, ''));
   }
 
   revalidatePath('/');

@@ -26,20 +26,13 @@ export default async function PostForm({ editId }: { editId?: string }) {
     <div>
       <form action={editId ? updatePost.bind(null, editId) : createPost}>
         <div className="space-y-6">
-          {oldPost?.thumbnailURL && (
-            <div className="aspect-video w-80 relative max-w-sm overflow-hidden rounded-md">
-              <Image
-                src={oldPost.thumbnailURL}
-                className="object-cover"
-                sizes="800px"
-                alt=""
-                fill
-              />
-            </div>
-          )}
-
           <div className="w-80">
-            <ImageCropper name="thumbnail" width={800} aspectRatio={16 / 9} />
+            <ImageCropper
+              defaultImage={oldPost?.thumbnailURL}
+              name="thumbnail"
+              width={800}
+              aspectRatio={16 / 9}
+            />
           </div>
 
           <div className="grid w-full gap-1.5">

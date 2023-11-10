@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <ClerkProvider afterSignInUrl="/" afterSignUpUrl="/onboarding">
       <html lang="ja">
-        <body className="px-4 py-10 bg-gray-50">
+        <body className="px-4 py-10 bg-gray-50 bg-[url('/grid.svg')]">
           <Browser>
             <Header />
             <main className="p-6">{children}</main>

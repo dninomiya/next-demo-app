@@ -5,6 +5,7 @@ import { db, putImage } from '@/app/actions/lib';
 import { clerkClient } from '@clerk/nextjs';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { z } from 'zod';
 
@@ -58,6 +59,7 @@ export const createUser = async (formData: FormData) => {
   });
 
   revalidatePath('/');
+  redirect('/');
 };
 
 export const updateUser = async (formData: FormData) => {

@@ -17,7 +17,6 @@ export default function SubmitButton({
     <Button {...props} disabled={pending}>
       {pending && <Loader size={18} className="mr-2 animate-spin" />}
       {children}
-      {pending && '中...'}
     </Button>
   );
 }

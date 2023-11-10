@@ -14,13 +14,15 @@ export default function ImageCropper({
   aspectRatio = 1,
   width,
   name,
+  defaultImage,
 }: {
   aspectRatio?: number;
   width: number;
+  defaultImage?: string | null;
   name: string;
 }) {
   const editor = useRef<AvatarEditor>(null);
-  const [preview, setPreview] = useState<string>();
+  const [preview, setPreview] = useState<string>(defaultImage || '');
   const { getRootProps, getInputProps, isDragAccept } = useDropzone({
     noKeyboard: true,
     maxSize: 1024 * 1024 * 2,
@@ -37,19 +39,20 @@ export default function ImageCropper({
   const [image, setImage] = useState<File>();
   const [scale, setScale] = useState(1.0);
   const [open, setOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const action = useRef<HTMLInputElement>(null);
 
   const cropImage = async () => {
     const dataUrl = editor.current?.getImage().toDataURL('image/png');
     const result = await resizeBase64Img(dataUrl!, width, width / aspectRatio);
     setOpen(false);
     setPreview(result);
-    inputRef.current!.value = result!;
+    action.current!.value = 'save';
   };
 
   return (
     <div>
-      <input type="hidden" ref={inputRef} name={name} />
+      <input type="hidden" value={preview} name={name} />
+      <input type="hidden" ref={action} name={`${name}-action`} />
       <div
         className={cn(
           'border overflow-hidden cursor-pointer rounded-md grid place-content-center relative',
@@ -71,10 +74,13 @@ export default function ImageCropper({
         <Button
           type="button"
           className="mt-4"
-          variant="ghost"
-          onClick={() => setPreview('')}
+          variant="outline"
+          onClick={() => {
+            setPreview('');
+            action.current!.value = 'delete';
+          }}
         >
-          削除
+          イメージを削除
         </Button>
       )}
 
