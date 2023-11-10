@@ -1,7 +1,7 @@
 'use server';
 
 import { authGuard } from '@/app/actions/auth';
-import { db, putImage } from '@/app/actions/lib';
+import { db, deleteImage, putImage } from '@/app/actions/lib';
 import { clerkClient } from '@clerk/nextjs';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -44,7 +44,7 @@ export const createUser = async (formData: FormData) => {
   if (profileImageDataURL) {
     data.profileImageURL = await putImage(
       profileImageDataURL,
-      `profileImage/${id}/image.png`
+      `users/${id}/avatar.png`
     );
   }
 
@@ -71,13 +71,17 @@ export const updateUser = async (formData: FormData) => {
     ...validatedData,
   };
 
+  const profileAction = formData.get('profileImage-action') as string;
   const profileImageDataURL = formData.get('profileImage') as string;
 
-  if (profileImageDataURL) {
+  if (profileImageDataURL && profileAction === 'save') {
     data.profileImageURL = await putImage(
       profileImageDataURL,
-      `profileImage/${id}/image.png`
+      `users/${id}/avatar.png`
     );
+  } else if (profileAction === 'delete') {
+    data.profileImageURL = null;
+    await deleteImage(`users/${id}/avatar.png`);
   }
 
   await db.user.update({
@@ -98,6 +102,8 @@ export const deleteUser = async () => {
       id,
     },
   });
+
+  await deleteImage(`users/${id}/avatar.png`);
 
   revalidatePath('/');
 };

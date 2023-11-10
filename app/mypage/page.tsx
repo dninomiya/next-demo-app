@@ -1,15 +1,32 @@
 import { getMyLikes, getMyPosts } from '@/app/actions/post';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import PostCard from '@/app/components/post-card';
+import { currentUser } from '@/app/actions/user';
 import Empty from '@/app/components/empty';
+import PostCard from '@/app/components/post-card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Edit } from 'lucide-react';
+import Link from 'next/link';
 
 export default async function Page() {
   const posts = await getMyPosts();
   const likes = await getMyLikes();
+  const user = await currentUser();
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <div>
-      <h1 className="font-bold text-xl mb-4">マイページ</h1>
+      <div className="flex items-center justify-between bg-black text-gray-100 mb-6 px-6 py-10 -mx-6">
+        <h1 className="font-bold text-xl">{user.name}</h1>
+        <Button size="icon" variant="ghost" className="rounded-full">
+          <Link href="/profile">
+            <Edit size={20} />
+            <span className="sr-only">プロフィール編集</span>
+          </Link>
+        </Button>
+      </div>
 
       <Tabs defaultValue="post">
         <TabsList className="mb-4">

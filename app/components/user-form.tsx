@@ -47,7 +47,9 @@ export default async function UserForm({ editMode }: { editMode?: boolean }) {
             />
           </div>
 
-          <SubmitButton>ユーザーを作成する</SubmitButton>
+          <SubmitButton>
+            {editMode ? '更新' : 'プロフィールを作成する'}
+          </SubmitButton>
         </div>
       </div>
     </form>

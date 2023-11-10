@@ -2,7 +2,6 @@
 
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Loader } from 'lucide-react';
-import React from 'react';
 import { useFormStatus } from 'react-dom';
 
 export default function SubmitButton({

@@ -1,3 +1,4 @@
+import { AppConfig } from '@/app.config';
 import UserMenu from '@/app/components/header/user-menu';
 import { Button } from '@/components/ui/button';
 import { SignInButton, SignUpButton, SignedIn, SignedOut } from '@clerk/nextjs';
@@ -7,7 +8,7 @@ export default function Header() {
   return (
     <header className="flex gap-2 items-center h-14 px-6">
       <Link href="/" className="font-black text-xl">
-        DEMO
+        {AppConfig.title}
       </Link>
       <span className="flex-1"></span>
       <SignedIn>
