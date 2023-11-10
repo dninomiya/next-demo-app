@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.445.0",
-    "@clerk/nextjs": "^4.26.2",
+    "@clerk/nextjs": "^4.27.1",
     "@prisma/client": "^5.5.2",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
