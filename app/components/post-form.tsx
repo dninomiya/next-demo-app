@@ -9,7 +9,6 @@ import SubmitButton from '@/app/components/submit-button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { faker } from '@faker-js/faker';
-import Image from 'next/image';
 
 export default async function PostForm({ editId }: { editId?: string }) {
   const oldPost = editId ? await getOwnPost(editId) : null;

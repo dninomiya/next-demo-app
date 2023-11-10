@@ -4,6 +4,7 @@ import { authGuard } from '@/app/actions/auth';
 import { db, deleteImage, putImage } from '@/app/actions/lib';
 import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { th } from 'date-fns/locale';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -223,5 +224,9 @@ export const getMyLikes = cache(async () => {
     },
   });
 
-  return user?.likes;
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  return user.likes;
 });

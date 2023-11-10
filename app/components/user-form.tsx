@@ -9,9 +9,11 @@ export default async function UserForm({ editMode }: { editMode?: boolean }) {
   const defaultValue = editMode
     ? {
         name: (await currentUser()).name,
+        profileImageURL: (await currentUser()).profileImageURL,
       }
     : {
         name: faker.internet.userName(),
+        profileImageURL: faker.internet.avatar(),
       };
 
   return (
@@ -24,7 +26,12 @@ export default async function UserForm({ editMode }: { editMode?: boolean }) {
         <div className="space-y-1.5">
           <Label>プロフィール画像</Label>
           <div className="w-40">
-            <ImageCropper name="profileImageURL" width={100} aspectRatio={1} />
+            <ImageCropper
+              defaultImage={defaultValue?.profileImageURL}
+              name="profileImageURL"
+              width={100}
+              aspectRatio={1}
+            />
           </div>
         </div>
 
