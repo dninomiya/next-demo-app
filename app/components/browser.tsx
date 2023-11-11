@@ -13,9 +13,7 @@ export default function Browser({ children }: { children: React.ReactNode }) {
           <span className="w-3 h-3 rounded-full bg-[#FCB024]"></span>
           <span className="w-3 h-3 rounded-full bg-[#28C131]"></span>
         </div>
-        <div className="bg-white">
-          <Suspense fallback={null}>{children}</Suspense>
-        </div>
+        <div className="bg-white">{children}</div>
       </div>
     </div>
   );
