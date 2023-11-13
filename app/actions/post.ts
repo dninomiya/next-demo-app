@@ -4,7 +4,6 @@ import { authGuard } from '@/app/actions/auth';
 import { db, deleteImage, putImage } from '@/app/actions/lib';
 import { Prisma } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { th } from 'date-fns/locale';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
@@ -93,7 +92,7 @@ export const deletePost = async (id: string, imageURL?: string | null) => {
 };
 
 export const getPost = cache(async (id: string) => {
-  return db.post.findFirst({
+  return db.post.findUnique({
     where: {
       id,
     },
@@ -103,7 +102,7 @@ export const getPost = cache(async (id: string) => {
 export const getOwnPost = async (id: string) => {
   const authorId = authGuard();
 
-  return db.post.findFirst({
+  return db.post.findUnique({
     where: {
       id,
       authorId,
@@ -129,7 +128,7 @@ export const getPostCount = cache(async () => {
 
 export const hasLike = cache(async (id: string) => {
   const uid = authGuard();
-  const post = await db.post.findFirst({
+  const post = await db.post.findUnique({
     where: {
       id,
       likes: {
@@ -145,7 +144,7 @@ export const hasLike = cache(async (id: string) => {
 
 export const toggleLike = async (id: string) => {
   const uid = authGuard();
-  const hasLike = await db.post.findFirst({
+  const hasLike = await db.post.findUnique({
     where: {
       id,
       likes: {
@@ -211,7 +210,7 @@ export const getMyPosts = cache(async () => {
 
 export const getMyLikes = cache(async () => {
   const id = authGuard();
-  const user = await db.user.findFirst({
+  const user = await db.user.findUnique({
     where: {
       id,
     },
