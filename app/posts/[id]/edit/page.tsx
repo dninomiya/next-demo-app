@@ -15,5 +15,14 @@ export default async function Page({
     notFound();
   }
 
-  return <PostForm editId={id} />;
+  return (
+    <PostForm
+      editId={id}
+      mode="edit"
+      defaultValue={{
+        body: post.body,
+        image: post.thumbnailURL,
+      }}
+    />
+  );
 }

@@ -10,17 +10,45 @@ import { cache } from 'react';
 import { z } from 'zod';
 
 const PostSchema = z.object({
-  body: z.string().max(140),
+  body: z
+    .string()
+    .min(1, {
+      message: '本文を入力してください',
+    })
+    .max(140, {
+      message: '本文は140文字以内で入力してください',
+    }),
 });
 
-export const createPost = async (formData: FormData) => {
+export type FormState =
+  | {
+      status: 'success';
+      message: string;
+    }
+  | {
+      status: 'error';
+      messages: string[];
+    }
+  | {
+      status: 'idle';
+    };
+
+export const createPost = async (formData: FormData): Promise<FormState> => {
   const authorId = authGuard();
   const id = randomUUID();
-  const validatedData = PostSchema.parse({
+  const validatedData = PostSchema.safeParse({
     body: formData.get('body'),
   });
+
+  if (!validatedData.success) {
+    return {
+      status: 'error',
+      messages: validatedData.error.errors.map((error) => error.message),
+    };
+  }
+
   const newData: Prisma.PostUncheckedCreateInput = {
-    ...validatedData,
+    ...validatedData.data,
     id,
     authorId,
   };
@@ -42,13 +70,24 @@ export const createPost = async (formData: FormData) => {
   redirect('/');
 };
 
-export const updatePost = async (id: string, formData: FormData) => {
+export const updatePost = async (
+  id: string,
+  formData: FormData
+): Promise<FormState> => {
   const authorId = authGuard();
-  const validatedData = PostSchema.parse({
+  const validatedData = PostSchema.safeParse({
     body: formData.get('body'),
   });
+
+  if (!validatedData.success) {
+    return {
+      status: 'error',
+      messages: validatedData.error.errors.map((error) => error.message),
+    };
+  }
+
   const newData: Prisma.PostUncheckedUpdateInput = {
-    body: validatedData.body,
+    body: validatedData.data.body,
   };
 
   const thumbnailDataURL = formData.get('thumbnail') as string;
@@ -71,6 +110,11 @@ export const updatePost = async (id: string, formData: FormData) => {
   });
 
   revalidatePath('/');
+
+  return {
+    status: 'success',
+    message: '更新しました',
+  };
 };
 
 export const deletePost = async (id: string, imageURL?: string | null) => {

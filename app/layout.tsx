@@ -7,6 +7,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import './globals.css';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: AppConfig.title,
@@ -29,6 +30,7 @@ export default function RootLayout({
           <Footer />
           <Analytics />
           <GithubLink href={AppConfig.githubURL} />
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
