@@ -27,7 +27,9 @@ export type FormState =
     }
   | {
       status: 'error';
-      messages: string[];
+      fieldErrors: {
+        body?: string[] | undefined;
+      };
     }
   | {
       status: 'idle';
@@ -43,7 +45,7 @@ export const createPost = async (formData: FormData): Promise<FormState> => {
   if (!validatedData.success) {
     return {
       status: 'error',
-      messages: validatedData.error.errors.map((error) => error.message),
+      fieldErrors: validatedData.error.flatten().fieldErrors,
     };
   }
 
@@ -82,7 +84,7 @@ export const updatePost = async (
   if (!validatedData.success) {
     return {
       status: 'error',
-      messages: validatedData.error.errors.map((error) => error.message),
+      fieldErrors: validatedData.error.flatten().fieldErrors,
     };
   }
 

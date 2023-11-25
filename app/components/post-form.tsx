@@ -29,7 +29,7 @@ type Props =
 
 export default function PostForm(props: Props) {
   const { toast } = useToast();
-  const [_, formAction] = useFormState(
+  const [formState, formAction] = useFormState(
     async (_: FormState, formData: FormData) => {
       let action;
       if (props.mode === 'create') {
@@ -45,7 +45,7 @@ export default function PostForm(props: Props) {
           });
         } else if (result.status === 'error') {
           toast({
-            title: result.messages.join('\n'),
+            title: '入力内容を確認してください',
             variant: 'destructive',
           });
         }
@@ -90,6 +90,12 @@ export default function PostForm(props: Props) {
               id="body"
             />
             <p className="text-[0.8rem] text-muted-foreground">最大140文字</p>
+            {formState.status === 'error' &&
+              formState.fieldErrors.body?.map((error) => (
+                <p key={error} className="text-red-500">
+                  {error}
+                </p>
+              ))}
           </div>
           <div>
             <SubmitButton>
