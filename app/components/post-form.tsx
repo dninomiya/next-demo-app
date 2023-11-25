@@ -82,7 +82,6 @@ export default function PostForm(props: Props) {
           <div className="grid w-full gap-1.5">
             <Label htmlFor="body">本文*</Label>
             <Textarea
-              maxLength={140}
               required
               name="body"
               placeholder=""
