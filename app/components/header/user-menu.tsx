@@ -18,8 +18,10 @@ export default async function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="rounded-full bg-gray-50 overflow-hidden border relative">
-          {user?.profileImageURL && (
+          {user?.profileImageURL ? (
             <Image width={40} height={40} src={user?.profileImageURL} alt="" />
+          ) : (
+            <div className="w-10 h-10" />
           )}
         </button>
       </DropdownMenuTrigger>
