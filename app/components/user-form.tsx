@@ -3,17 +3,17 @@ import ImageCropper from '@/app/components/image-cropper';
 import SubmitButton from '@/app/components/submit-button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { faker } from '@faker-js/faker';
 
 export default async function UserForm({ editMode }: { editMode?: boolean }) {
+  const user = await currentUser();
   const defaultValue = editMode
     ? {
-        name: (await currentUser()).name,
-        profileImageURL: (await currentUser()).profileImageURL,
+        name: user?.name,
+        profileImage: user?.profileImageURL,
       }
     : {
-        name: faker.internet.userName(),
-        profileImageURL: faker.internet.avatar(),
+        name: 'Demo User',
+        profileImage: '',
       };
 
   return (
@@ -27,9 +27,9 @@ export default async function UserForm({ editMode }: { editMode?: boolean }) {
           <Label>プロフィール画像</Label>
           <div className="w-40">
             <ImageCropper
-              defaultImage={defaultValue?.profileImageURL}
-              name="profileImageURL"
-              width={100}
+              defaultImage={defaultValue?.profileImage}
+              name="profileImage"
+              width={400}
               aspectRatio={1}
             />
           </div>

@@ -17,7 +17,7 @@ export default async function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="rounded-full overflow-hidden border relative">
+        <button className="rounded-full bg-gray-50 overflow-hidden border relative">
           {user?.profileImageURL && (
             <Image width={40} height={40} src={user?.profileImageURL} alt="" />
           )}

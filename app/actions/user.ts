@@ -1,7 +1,7 @@
 'use server';
 
 import { authGuard } from '@/app/actions/auth';
-import { clerkClient } from '@clerk/nextjs';
+import { auth, clerkClient } from '@clerk/nextjs';
 import { db, deleteImage, putImage } from '@/app/actions/lib';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
@@ -14,16 +14,17 @@ const UserSchema = z.object({
 });
 
 export const currentUser = cache(async () => {
-  const uid = authGuard();
+  const { userId } = auth();
+
+  if (!userId) {
+    return null;
+  }
+
   const user = await db.user.findUnique({
     where: {
-      id: uid,
+      id: userId,
     },
   });
-
-  if (!user) {
-    throw new Error('User not found');
-  }
 
   return user;
 });
@@ -63,6 +64,7 @@ export const createUser = async (formData: FormData) => {
 };
 
 export const updateUser = async (formData: FormData) => {
+  console.log(formData);
   const id = authGuard();
   const validatedData = UserSchema.parse({
     name: formData.get('name'),

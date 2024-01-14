@@ -13,6 +13,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.r2.dev',
       },
+      {
+        protocol: 'https',
+        hostname: 'cloudflare-ipfs.com',
+      },
     ],
   },
 };
